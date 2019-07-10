@@ -8,6 +8,7 @@
 # load packages -----------------------------------------------------------
 library(sp)
 library(tidyverse)
+library(viridis)
 
 
 # mapping table -----------------------------------------------------------
@@ -93,6 +94,16 @@ mapping_city_district <- tribble(
   'zehdenick', 'Oberhavel',
   'zirndorf', 'Fürth (Kreisfreie Stadt)'
 )
+
+# import map of German Laender --------------------------------------------
+shape_de_level_1 <- readRDS(url("https://biogeo.ucdavis.edu/data/gadm3.6/Rsp/gadm36_DEU_1_sp.rds", encoding = "utf-8"))
+tmp1 <- data.frame(id = rownames(shape_de_level_1@data), shape_de_level_1@data)
+tmp1$id <- as.character(tmp1$id)
+tmp2 <- fortify(shape_de_level_1)
+LAENDER <- 
+  tmp1 %>% 
+  left_join(tmp2, by = "id")
+rm(tmp1, tmp2)
 
 
 # import map of German districts ------------------------------------------
